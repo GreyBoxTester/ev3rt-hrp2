@@ -903,6 +903,98 @@ error_exit:
 }
 
 /**
+ * Function to enable UART sensor port.
+ * @param port a sensor port
+ * @retval E_OK  success
+ * @retval E_PAR invalid port number
+ */
+ER_UINT extsvc_uart_port_enable(intptr_t port, intptr_t par2, intptr_t par3, intptr_t par4, intptr_t par5, ID cdmid) {
+	ER_UINT ercd = E_OK;
+	CHECK_SENSOR_PORT(port);
+
+	UartPortEnable((UBYTE)port);
+	
+error_exit:
+	return ercd;
+}
+
+/**
+ * Function to disable UART sensor port.
+ * @param port a sensor port
+ * @retval E_OK  success
+ * @retval E_PAR invalid port number
+ */
+ER_UINT extsvc_uart_port_disable(intptr_t port, intptr_t par2, intptr_t par3, intptr_t par4, intptr_t par5, ID cdmid) {
+	ER_UINT ercd = E_OK;
+	CHECK_SENSOR_PORT(port);
+
+	UartPortDisable((UBYTE)port);
+
+error_exit:
+	return ercd;
+}
+
+/**
+ * Function to set UART sensor port baudrate.
+ * @param port a sensor port
+ * @param baudrate baudrate
+ * @retval E_OK  success
+ * @retval E_PAR invalid port number
+ */
+ER_UINT extsvc_uart_port_setup(intptr_t port, intptr_t baudrate, intptr_t par3, intptr_t par4, intptr_t par5, ID cdmid) {
+	ER_UINT ercd = E_OK;
+	CHECK_SENSOR_PORT(port);
+	
+	UartPortSetup((UBYTE)port, (ULONG)baudrate);
+	
+error_exit:
+	return ercd;
+}
+
+/**
+ * Function to send data to UART port. Blocks until completion.
+ * @param port a sensor port
+ * @param data pointer to data
+ * @param size size of data in bytes
+ * @retval E_OK  success
+ * @retval E_PAR invalid port number
+ */
+ER_UINT extsvc_uart_port_send(intptr_t port, intptr_t data, intptr_t size, intptr_t par4, intptr_t par5, ID cdmid) {
+	ER_UINT ercd = E_OK;
+	CHECK_SENSOR_PORT(port);
+	
+	for (size_t i = 0; i < (size_t)size; i++)
+	{
+	 	while (!UartPortSend((UBYTE)port, ((UBYTE*)data)[i]));
+	}
+
+error_exit:
+	return ercd;
+}
+
+
+/**
+ * Function to receive data from UART port. Blocks until completion.
+ * @param port a sensor port
+ * @param data pointer to data
+ * @param size size of data in bytes
+ * @retval E_OK  success
+ * @retval E_PAR invalid port number
+ */
+ER_UINT extsvc_uart_port_receive(intptr_t port, intptr_t data, intptr_t size, intptr_t par4, intptr_t par5, ID cdmid) {
+	ER_UINT ercd = E_OK;
+	CHECK_SENSOR_PORT(port);
+	
+	for (size_t i = 0; i < (size_t)size; i++)
+	{
+	 	while (!UartPortReceive((UBYTE)port, (UBYTE*)data + i));
+	}
+
+error_exit:
+	return ercd;
+}
+
+/**
  * For debug
  */
 

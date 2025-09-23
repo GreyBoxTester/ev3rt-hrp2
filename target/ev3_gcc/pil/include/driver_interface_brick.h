@@ -201,6 +201,11 @@ extern ER _start_i2c_transaction(int port, uint_t addr, const uint8_t *writebuf,
 #define TFN_EV3_STA_CYC         (28)
 #define TFN_EV3_STP_CYC         (29)
 #define TFN_START_I2C_TRANS     (41)
+#define TFN_UART_PORT_ENABLE	(50)
+#define TFN_UART_PORT_DISABLE	(51)
+#define TFN_UART_PORT_SETUP	(52)
+#define TFN_UART_PORT_SEND	(53)
+#define TFN_UART_PORT_RECEIVE	(54)
 
 /**
  * Extended service call wrappers which can be used to implement APIs
@@ -248,6 +253,37 @@ static inline ER_ID start_i2c_transaction(int port, uint_t addr, void *writebuf,
 	return ercd;
 }
 
+static inline ER_ID uart_port_enable(int port) {
+	ER_UINT ercd = cal_svc(TFN_UART_PORT_ENABLE, (intptr_t)port, 0, 0, 0, 0);
+	assert(ercd != E_NOMEM);
+	return ercd;
+}
+
+
+static inline ER_ID uart_port_disable(int port) {
+	ER_UINT ercd = cal_svc(TFN_UART_PORT_DISABLE, (intptr_t)port, 0, 0, 0, 0);
+	assert(ercd != E_NOMEM);
+	return ercd;
+}
+
+static inline ER_ID uart_port_setup(int port, unsigned long baudrate) {
+	ER_UINT ercd = cal_svc(TFN_UART_PORT_SETUP, (intptr_t)port, (intptr_t)baudrate, 0, 0, 0);
+	assert(ercd != E_NOMEM);
+	return ercd;
+}
+
+static inline ER_ID uart_port_send(int port, const void* data, size_t size) {
+	ER_UINT ercd = cal_svc(TFN_UART_PORT_SEND, (intptr_t)port, (intptr_t)data, (intptr_t)size, 0, 0);
+	assert(ercd != E_NOMEM);
+	return ercd;
+}
+
+static inline ER_ID uart_port_receive(int port, void* data, size_t size) {
+	ER_UINT ercd = cal_svc(TFN_UART_PORT_RECEIVE, (intptr_t)port, (intptr_t)data, (intptr_t)size, 0, 0);
+	assert(ercd != E_NOMEM);
+	return ercd;
+}
+
 /**
  * Extended service call stubs
  */
@@ -258,6 +294,12 @@ extern ER_UINT extsvc__ev3_acre_cyc(intptr_t pk_ccyc, intptr_t par2, intptr_t pa
 extern ER_UINT extsvc__ev3_sta_cyc(intptr_t ev3cycid, intptr_t par2, intptr_t par3, intptr_t par4, intptr_t par5, ID cdmid);
 extern ER_UINT extsvc__ev3_stp_cyc(intptr_t ev3cycid, intptr_t par2, intptr_t par3, intptr_t par4, intptr_t par5, ID cdmid);
 extern ER_UINT extsvc_start_i2c_transaction(intptr_t port, intptr_t addr, intptr_t writebuf, intptr_t writelen, intptr_t readlen, ID cdmid);
+extern ER_UINT extsvc_uart_port_enable(intptr_t port, intptr_t par2, intptr_t par3, intptr_t par4, intptr_t par5, ID cdmid);
+extern ER_UINT extsvc_uart_port_disable(intptr_t port, intptr_t par2, intptr_t par3, intptr_t par4, intptr_t par5, ID cdmid);
+extern ER_UINT extsvc_uart_port_setup(intptr_t port, intptr_t baudrate, intptr_t par3, intptr_t par4, intptr_t par5, ID cdmid);
+extern ER_UINT extsvc_uart_port_send(intptr_t port, intptr_t data, intptr_t size, intptr_t par4, intptr_t par5, ID cdmid);
+extern ER_UINT extsvc_uart_port_receive(intptr_t port, intptr_t data, intptr_t size, intptr_t par4, intptr_t par5, ID cdmid);
+
 
 #if 0 // Legacy code
 
