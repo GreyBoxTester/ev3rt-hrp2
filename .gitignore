@@ -30,6 +30,9 @@
 # System image
 uImage
 
+# Kernel binary
+hrp2
+
 # Build directories
 OBJ/
 
